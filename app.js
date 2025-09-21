@@ -31,19 +31,11 @@ function updateDisplay() {
 }
 
 async function fetchUpgrades() {
-    try { 
         const response = await fetch('https://cookie-upgrade-api.vercel.app/api/upgrades');
         const data = await response.json();
         upgrades = data;
         createShop();
-    } catch (error) {
-        upgrades = [
-            { id: 1, name: "Auto-Clicker", cost: 100, increase: 1 },
-            { id: 2, name: "Enhanced Oven", cost: 500, increase: 5 }
-        ];
-        createShop();
-    }
-}
+    } 
 
 function createShop() {
     upgradesList.innerHTML = '';
