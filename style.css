@@ -1,10 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     margin: 20px;
+    background-color: white;   
 }
 
 .game-container {
     display: flex;
+    max-width: 800px;
+    margin: auto;
 }
 
 .main-game {
@@ -13,14 +16,30 @@ body {
     margin-right: 50px;
 }
 
+h1 {
+    color: #333;
+    text-align: center;
+    margin-right: 50px;
+}
+
 .shop {
     width: 300px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.shop h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 25px;
 }
 
 .cookie-button {
     width: 200px;
     height: 200px;
     cursor: pointer;
+    border-radius: 8px;
 }
 
 .cookie-image {
@@ -28,18 +47,16 @@ body {
     height: 100%;
 }
 
-.upgrade-item {
-    margin-bottom: 10px;
+@media (max-width: 800px) {
+    .game-container{
+        flex-direction: column;
     }
-
-        
-.buy-button {
-    cursor: pointer;
+    .main-game {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
     }
-
-@media (min-width: 800px) {
-    .game-container {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    .shop {
+        width: 100%;
     }
 }

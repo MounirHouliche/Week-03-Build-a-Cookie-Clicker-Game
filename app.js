@@ -3,11 +3,11 @@ let cookiesPerSecond = 0;
 let upgrades = [];
 
 const cookieCount = document.getElementById('cookieCount');
-const cpsDisplay = document.getElementById('cosDisplay');
+const cpsDisplay = document.getElementById('cpsDisplay'); 
 const cookieButton = document.getElementById('cookieButton');
 const upgradesList = document.getElementById('upgradesList');
 
-page.addEventListener('load', function () {
+window.addEventListener('load', function () {
     loadSavedGame();
     fetchUpgrades();
     updateDisplay();
@@ -16,7 +16,7 @@ page.addEventListener('load', function () {
 
 function gameLoop() {
     cookies += cookiesPerSecond;
-    updatedDisplay();
+    updateDisplay(); 
     saveGame();
 }
 
@@ -31,11 +31,45 @@ function updateDisplay() {
 }
 
 async function fetchUpgrades() {
+    try { 
         const response = await fetch('https://cookie-upgrade-api.vercel.app/api/upgrades');
         const data = await response.json();
         upgrades = data;
         createShop();
+    } catch (error) {
+        upgrades = [
+            { id: 1, name: "Auto-Clicker", cost: 100, increase: 1 },
+            { id: 2, name: "Enhanced Oven", cost: 500, increase: 5 }
+        ];
+        createShop();
     }
+}
+
+function createShop() {
+    upgradesList.innerHTML = '';
+    for (let i = 0; i < upgrades.length; i++) {
+        const upgrade = upgrades[i];
+        const upgradeBox = document.createElement('div');
+        upgradeBox.innerHTML = `
+        <div>${upgrade.name} - Cost: ${upgrade.cost} cookies - Makes ${upgrade.increase} cookies/sec</div>
+        <button onclick="buyUpgrade(${upgrade.id})">Buy This!</button>
+        `;
+        upgradesList.appendChild(upgradeBox);
+    } 
+}
+
+function buyUpgrade(upgradeId) {
+    const upgrade = upgrades.find(u => u.id === upgradeId);
+    
+    if (cookies >= upgrade.cost) {
+        cookies -= upgrade.cost;
+        cookiesPerSecond += upgrade.increase;
+        upgrade.cost = Math.floor(upgrade.cost * 1.2);
+        
+        updateDisplay();
+        createShop();
+    }
+}
 
 function saveGame() {
     const gameData = {
@@ -46,20 +80,16 @@ function saveGame() {
     localStorage.setItem('cookieGame', JSON.stringify(gameData));
 }
 
-
 function loadSavedGame() {
     const saved = localStorage.getItem('cookieGame');
     if (saved) {
         const gameData = JSON.parse(saved);
         cookies = gameData.cookies || 0;
-        cookiesPerSecond = gameData.cookiesPerSecond
+        cookiesPerSecond = gameData.cookiesPerSecond || 0; 
         if (gameData.upgrades) {
             upgrades = gameData.upgrades;
         }
     }
 }
 
-
-
 cookieButton.addEventListener('click', clickCookie);
-
